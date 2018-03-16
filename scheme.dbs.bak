@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<project name="Carthafind" id="Project_a84f22" template="Default" database="MySql" >
+	<schema name="carthafind" schemaname="carthafind" >
+		<table name="author" >
+			<column name="id" type="int" jt="4" mandatory="y" />
+			<index name="pk_author_id" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+			<fk name="fk_author_user" to_schema="carthafind" to_table="user" >
+				<fk_column name="id" pk="id" />
+			</fk>
+			<storage><![CDATA[engine=InnoDB]]></storage>
+		</table>
+		<table name="contains" >
+			<column name="id" type="int" jt="4" mandatory="y" autoincrement="y" />
+			<column name="id_project" type="int" jt="4" />
+			<column name="id_keyword" type="int" jt="4" />
+			<index name="pk_contains_id" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+			<index name="idx_contains_id_project" unique="NORMAL" >
+				<column name="id_project" />
+			</index>
+			<index name="idx_contains_id_keyword" unique="NORMAL" >
+				<column name="id_keyword" />
+			</index>
+			<fk name="fk_contains_project" to_schema="carthafind" to_table="project" >
+				<fk_column name="id_project" pk="id" />
+			</fk>
+			<fk name="fk_contains_keyword" to_schema="carthafind" to_table="keyword" >
+				<fk_column name="id_keyword" pk="id" />
+			</fk>
+			<storage><![CDATA[engine=InnoDB]]></storage>
+		</table>
+		<table name="keyword" >
+			<column name="id" type="int" jt="4" mandatory="y" autoincrement="y" />
+			<column name="name" type="varchar" length="20" jt="12" />
+			<index name="pk_keyword_id" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+			<storage><![CDATA[engine=InnoDB]]></storage>
+		</table>
+		<table name="participates" >
+			<column name="id" type="int" jt="4" mandatory="y" autoincrement="y" />
+			<column name="id_project" type="int" jt="4" />
+			<column name="id_author" type="int" jt="4" />
+			<index name="pk_participates_id" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+			<index name="idx_participates_id_project" unique="NORMAL" >
+				<column name="id_project" />
+			</index>
+			<index name="idx_participates_id_author" unique="NORMAL" >
+				<column name="id_author" />
+			</index>
+			<fk name="fk_participates_project" to_schema="carthafind" to_table="project" >
+				<fk_column name="id_project" pk="id" />
+			</fk>
+			<fk name="fk_participates_author" to_schema="carthafind" to_table="author" >
+				<fk_column name="id_author" pk="id" />
+			</fk>
+			<storage><![CDATA[engine=InnoDB]]></storage>
+		</table>
+		<table name="project" >
+			<column name="id" type="int" jt="4" mandatory="y" autoincrement="y" />
+			<column name="title" type="varchar" length="40" jt="12" />
+			<column name="description" type="varchar" length="200" jt="12" />
+			<column name="length" type="int" jt="4" />
+			<column name="final_vote" type="int" jt="4" />
+			<column name="progress" type="int" jt="4" />
+			<column name="comment" type="longtext" length="300" jt="-1" />
+			<column name="id_responsabile" type="int" jt="4" />
+			<index name="pk_project_id" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+			<index name="idx_project_id_responsabile" unique="NORMAL" >
+				<column name="id_responsabile" />
+			</index>
+			<fk name="fk_project_teacher" to_schema="carthafind" to_table="teacher" >
+				<fk_column name="id_responsabile" pk="id" />
+			</fk>
+			<storage><![CDATA[engine=InnoDB]]></storage>
+		</table>
+		<table name="teacher" >
+			<column name="id" type="int" jt="4" mandatory="y" />
+			<index name="pk_teacher_id" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+			<fk name="fk_teacher_user" to_schema="carthafind" to_table="user" >
+				<fk_column name="id" pk="id" />
+			</fk>
+			<storage><![CDATA[engine=InnoDB]]></storage>
+		</table>
+		<table name="user" >
+			<column name="id" type="int" jt="4" mandatory="y" autoincrement="y" />
+			<column name="name" type="varchar" length="20" jt="12" />
+			<column name="surname" type="varchar" length="20" jt="12" />
+			<column name="granted" type="enum" jt="12" >
+				<enumeration>&#039;Administrator&#039;,&#039;Registered&#039;,&#039;Normal&#039;</enumeration>
+			</column>
+			<index name="pk_user_id" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+			<storage><![CDATA[engine=InnoDB]]></storage>
+		</table>
+	</schema>
+	<layout name="Default Layout" id="Layout_4357094" show_relation="columns" >
+		<entity schema="carthafind" name="keyword" color="c1d8ee" x="390" y="45" />
+		<entity schema="carthafind" name="contains" color="c1d8ee" x="210" y="45" />
+		<entity schema="carthafind" name="participates" color="c1d8ee" x="210" y="150" />
+		<entity schema="carthafind" name="author" color="c1d8ee" x="390" y="150" />
+		<entity schema="carthafind" name="project" color="c1d8ee" x="45" y="45" />
+		<entity schema="carthafind" name="teacher" color="c1d8ee" x="75" y="315" />
+		<entity schema="carthafind" name="user" color="c1d8ee" x="210" y="255" />
+	</layout>
+</project>
