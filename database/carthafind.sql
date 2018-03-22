@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Creato il: Mar 17, 2018 alle 00:33
--- Versione del server: 10.1.29-MariaDB
--- Versione PHP: 7.2.0
+-- Generation Time: Mar 22, 2018 at 06:12 PM
+-- Server version: 10.1.28-MariaDB
+-- PHP Version: 7.1.10
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
@@ -21,13 +21,11 @@ SET time_zone = "+00:00";
 --
 -- Database: `carthafind`
 --
-CREATE DATABASE IF NOT EXISTS `carthafind` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci;
-USE `carthafind`;
 
 -- --------------------------------------------------------
 
 --
--- Struttura della tabella `author`
+-- Table structure for table `author`
 --
 
 CREATE TABLE `author` (
@@ -35,18 +33,17 @@ CREATE TABLE `author` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Dump dei dati per la tabella `author`
+-- Dumping data for table `author`
 --
 
 INSERT INTO `author` (`id`) VALUES
-(1),
 (4),
 (5);
 
 -- --------------------------------------------------------
 
 --
--- Struttura della tabella `contains`
+-- Table structure for table `contains`
 --
 
 CREATE TABLE `contains` (
@@ -56,7 +53,7 @@ CREATE TABLE `contains` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Dump dei dati per la tabella `contains`
+-- Dumping data for table `contains`
 --
 
 INSERT INTO `contains` (`id`, `id_project`, `id_keyword`) VALUES
@@ -72,7 +69,7 @@ INSERT INTO `contains` (`id`, `id_project`, `id_keyword`) VALUES
 -- --------------------------------------------------------
 
 --
--- Struttura della tabella `keyword`
+-- Table structure for table `keyword`
 --
 
 CREATE TABLE `keyword` (
@@ -81,7 +78,7 @@ CREATE TABLE `keyword` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Dump dei dati per la tabella `keyword`
+-- Dumping data for table `keyword`
 --
 
 INSERT INTO `keyword` (`id`, `name`) VALUES
@@ -105,7 +102,7 @@ INSERT INTO `keyword` (`id`, `name`) VALUES
 -- --------------------------------------------------------
 
 --
--- Struttura della tabella `participates`
+-- Table structure for table `participates`
 --
 
 CREATE TABLE `participates` (
@@ -115,18 +112,17 @@ CREATE TABLE `participates` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Dump dei dati per la tabella `participates`
+-- Dumping data for table `participates`
 --
 
 INSERT INTO `participates` (`id`, `id_project`, `id_author`) VALUES
 (1, 1, 4),
-(2, 1, 5),
-(3, 1, 1);
+(2, 1, 5);
 
 -- --------------------------------------------------------
 
 --
--- Struttura della tabella `project`
+-- Table structure for table `project`
 --
 
 CREATE TABLE `project` (
@@ -141,18 +137,25 @@ CREATE TABLE `project` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Dump dei dati per la tabella `project`
+-- Dumping data for table `project`
 --
 
 INSERT INTO `project` (`id`, `title`, `description`, `length`, `final_vote`, `progress`, `comment`, `id_responsible`) VALUES
 (1, 'ReactionGame', 'Realizzazione di un sistema di gioco e simulazione per l\'allenamento dei tempi di reazione ed il miglioramento della coordinazione per sportivi basato su Arduino ', 94, 4, 90, 'Quasi completo e funzionante', 6);
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `teacher`
+--
 
 CREATE TABLE `teacher` (
   `id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-
+--
+-- Dumping data for table `teacher`
+--
 
 INSERT INTO `teacher` (`id`) VALUES
 (6);
@@ -160,7 +163,7 @@ INSERT INTO `teacher` (`id`) VALUES
 -- --------------------------------------------------------
 
 --
--- Struttura della tabella `user`
+-- Table structure for table `user`
 --
 
 CREATE TABLE `user` (
@@ -174,28 +177,41 @@ CREATE TABLE `user` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Dump dei dati per la tabella `user`
+-- Dumping data for table `user`
 --
 
 INSERT INTO `user` (`id`, `name`, `surname`, `granted`, `username`, `password`, `email`) VALUES
-(1, 'Nadir', 'Barlozzo', 'Administrator', 'barnad', 0x7261756c6f3100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000, 'nadir.barlozzo@samtrevano.ch'),
 (4, 'Duchan', 'Bulloni', 'Registered', 'djuman', 0x7261756c6f3200000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000, 'erik.stalliviere@samtrevano.ch'),
 (5, 'Erik', 'Stalliviere', 'Registered', 'stanli', 0x7261756c6f3300000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000, 'djuman.bulloni@samtrevano.ch'),
 (6, 'Luca', 'Muggiasca', 'Administrator', 'giasca', 0x63617374696f6e650000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000, 'luca.muggiasca@edu.ti.ch'),
-(9, 'Francesco', 'Mussi', 'Normal', 'LL', 0x31393866373938393837396336393833303664306361393531666335626630303061666234623032336437356134656436343835313637356462343838316636, 'francesco.mussi@edu.ti.ch');
+(9, 'Francesco', 'Mussi', 'Normal', 'LL', 0x31393866373938393837396336393833303664306361393531666335626630303061666234623032336437356134656436343835313637356462343838316636, 'francesco.mussi@edu.ti.ch'),
+(12, 'Adriano', 'Barchi', 'Normal', 'droppoilbitcoin', 0x64366138616238323737373736303435376462333662383031313064616663306161376266356264663038396662383435306438323864646231613166616564, 'adriano.barchi@edu.ti.ch'),
+(23, 'Massimo', 'Sartori', 'Normal', 'Sassimo', 0x63663832373663613630303631626166323631313931376335303731376132623162636266663063306432356530306239356566363637616238663135386630, 'massimo.sartori@edu.ti.ch'),
+(27, 'Nadir', 'Barlozzo', 'Registered', 'barnad', 0x63646335383163343864326235336432366136313266643066383034326461666534643131636630396138636130613032306663626362613464393736383632, 'nadir.barlozzo@samtrevano.ch');
+
+-- --------------------------------------------------------
 
 --
--- Indici per le tabelle scaricate
+-- Table structure for table `verify`
+--
+
+CREATE TABLE `verify` (
+  `id` int(11) NOT NULL,
+  `token` varchar(16) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Indexes for dumped tables
 --
 
 --
--- Indici per le tabelle `author`
+-- Indexes for table `author`
 --
 ALTER TABLE `author`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indici per le tabelle `contains`
+-- Indexes for table `contains`
 --
 ALTER TABLE `contains`
   ADD PRIMARY KEY (`id`),
@@ -203,13 +219,13 @@ ALTER TABLE `contains`
   ADD KEY `idx_contains_id_keyword` (`id_keyword`);
 
 --
--- Indici per le tabelle `keyword`
+-- Indexes for table `keyword`
 --
 ALTER TABLE `keyword`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indici per le tabelle `participates`
+-- Indexes for table `participates`
 --
 ALTER TABLE `participates`
   ADD PRIMARY KEY (`id`),
@@ -217,90 +233,96 @@ ALTER TABLE `participates`
   ADD KEY `idx_participates_id_author` (`id_author`);
 
 --
--- Indici per le tabelle `project`
+-- Indexes for table `project`
 --
 ALTER TABLE `project`
   ADD PRIMARY KEY (`id`),
   ADD KEY `idx_project_id_responsabile` (`id_responsible`);
 
 --
--- Indici per le tabelle `teacher`
+-- Indexes for table `teacher`
 --
 ALTER TABLE `teacher`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indici per le tabelle `user`
+-- Indexes for table `user`
 --
 ALTER TABLE `user`
   ADD PRIMARY KEY (`id`);
 
 --
--- AUTO_INCREMENT per le tabelle scaricate
+-- Indexes for table `verify`
+--
+ALTER TABLE `verify`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- AUTO_INCREMENT for dumped tables
 --
 
 --
--- AUTO_INCREMENT per la tabella `contains`
+-- AUTO_INCREMENT for table `contains`
 --
 ALTER TABLE `contains`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
--- AUTO_INCREMENT per la tabella `keyword`
+-- AUTO_INCREMENT for table `keyword`
 --
 ALTER TABLE `keyword`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
--- AUTO_INCREMENT per la tabella `participates`
+-- AUTO_INCREMENT for table `participates`
 --
 ALTER TABLE `participates`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
--- AUTO_INCREMENT per la tabella `project`
+-- AUTO_INCREMENT for table `project`
 --
 ALTER TABLE `project`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
--- AUTO_INCREMENT per la tabella `user`
+-- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
 
 --
--- Limiti per le tabelle scaricate
+-- Constraints for dumped tables
 --
 
 --
--- Limiti per la tabella `author`
+-- Constraints for table `author`
 --
 ALTER TABLE `author`
   ADD CONSTRAINT `fk_author_user` FOREIGN KEY (`id`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 --
--- Limiti per la tabella `contains`
+-- Constraints for table `contains`
 --
 ALTER TABLE `contains`
   ADD CONSTRAINT `fk_contains_keyword` FOREIGN KEY (`id_keyword`) REFERENCES `keyword` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   ADD CONSTRAINT `fk_contains_project` FOREIGN KEY (`id_project`) REFERENCES `project` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 --
--- Limiti per la tabella `participates`
+-- Constraints for table `participates`
 --
 ALTER TABLE `participates`
   ADD CONSTRAINT `fk_participates_author` FOREIGN KEY (`id_author`) REFERENCES `author` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   ADD CONSTRAINT `fk_participates_project` FOREIGN KEY (`id_project`) REFERENCES `project` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 --
--- Limiti per la tabella `project`
+-- Constraints for table `project`
 --
 ALTER TABLE `project`
   ADD CONSTRAINT `fk_project_teacher` FOREIGN KEY (`id_responsible`) REFERENCES `teacher` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 --
--- Limiti per la tabella `teacher`
+-- Constraints for table `teacher`
 --
 ALTER TABLE `teacher`
   ADD CONSTRAINT `fk_teacher_user` FOREIGN KEY (`id`) REFERENCES `user` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;

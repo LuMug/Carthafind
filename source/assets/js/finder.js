@@ -1,16 +1,16 @@
 $(document).ready(function() {
     var activeSystemClass = $('.list-group-item.active');
 
-    $('#system-search').keyup( function() {
+    $('#system-search').keyup(function() {
 		var finder = this;
         var tableBody = $('.table-list-search tbody');
         var tableRowsClass = $('.table-list-search tbody tr');
         $('.search-sf').remove();
-		
+
         tableRowsClass.each(function(i, val) {
             var rowText = $(val).text().toLowerCase();
             var inputText = $(finder).val().toLowerCase();
-			
+
 			$('.search-query-sf').remove();
             if(inputText != '')
             {
@@ -19,7 +19,7 @@ $(document).ready(function() {
                     + '"</strong></td></tr>');
             }
 
-			
+
             if(rowText.indexOf(inputText) == -1)
             {
                 tableRowsClass.eq(i).hide();
