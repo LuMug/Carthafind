@@ -98,19 +98,205 @@
 			<column name="granted" type="enum" jt="12" >
 				<enumeration>&#039;Administrator&#039;,&#039;Registered&#039;,&#039;Normal&#039;</enumeration>
 			</column>
+			<column name="username" type="varchar" length="20" jt="12" />
+			<column name="password" type="varchar" length="20" jt="12" />
+			<column name="email" type="varchar" length="50" jt="12" />
 			<index name="pk_user_id" unique="PRIMARY_KEY" >
 				<column name="id" />
 			</index>
 			<storage><![CDATA[engine=InnoDB]]></storage>
 		</table>
 	</schema>
+	<connector name="" database="MySql" driver_class="com.mysql.jdbc.Driver" driver_jar="mysql-connector-java-5.1.44-bin.jar" driver_desc="Standard" host="localhost" port="3306" user="root" />
 	<layout name="Default Layout" id="Layout_4357094" show_relation="columns" >
-		<entity schema="carthafind" name="keyword" color="c1d8ee" x="390" y="45" />
-		<entity schema="carthafind" name="contains" color="c1d8ee" x="210" y="45" />
-		<entity schema="carthafind" name="participates" color="c1d8ee" x="210" y="150" />
-		<entity schema="carthafind" name="author" color="c1d8ee" x="390" y="150" />
-		<entity schema="carthafind" name="project" color="c1d8ee" x="45" y="45" />
-		<entity schema="carthafind" name="teacher" color="c1d8ee" x="75" y="315" />
 		<entity schema="carthafind" name="user" color="c1d8ee" x="210" y="255" />
+		<entity schema="carthafind" name="teacher" color="c1d8ee" x="75" y="315" />
+		<entity schema="carthafind" name="author" color="c1d8ee" x="390" y="150" />
+		<entity schema="carthafind" name="keyword" color="c1d8ee" x="390" y="45" />
+		<entity schema="carthafind" name="project" color="c1d8ee" x="45" y="45" />
+		<entity schema="carthafind" name="participates" color="c1d8ee" x="210" y="150" />
+		<entity schema="carthafind" name="contains" color="c1d8ee" x="210" y="45" />
+		<script name="author" id="Editor_2334ca6" language="SQL" >
+			<string><![CDATA[CREATE TABLE carthafind.author ( 
+	id                   int  NOT NULL  ,
+	CONSTRAINT pk_author_id PRIMARY KEY ( id )
+ ) engine=InnoDB;
+
+ALTER TABLE carthafind.author ADD CONSTRAINT fk_author_user FOREIGN KEY ( id ) REFERENCES carthafind.`user`( id ) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+]]></string>
+		</script>
+		<script name="author_001" id="Editor_3a6d28" language="SQL" >
+			<string><![CDATA[INSERT INTO carthafind.author
+	( id) VALUES ( ? );]]></string>
+		</script>
+		<script name="contains" id="Editor_1dbcd4f" language="SQL" >
+			<string><![CDATA[CREATE TABLE carthafind.contains ( 
+	id                   int  NOT NULL  AUTO_INCREMENT,
+	id_project           int    ,
+	id_keyword           int    ,
+	CONSTRAINT pk_contains_id PRIMARY KEY ( id )
+ ) engine=InnoDB;
+
+CREATE INDEX idx_contains_id_project ON carthafind.contains ( id_project );
+
+CREATE INDEX idx_contains_id_keyword ON carthafind.contains ( id_keyword );
+
+ALTER TABLE carthafind.contains ADD CONSTRAINT fk_contains_project FOREIGN KEY ( id_project ) REFERENCES carthafind.project( id ) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+ALTER TABLE carthafind.contains ADD CONSTRAINT fk_contains_keyword FOREIGN KEY ( id_keyword ) REFERENCES carthafind.keyword( id ) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+]]></string>
+		</script>
+		<script name="contains_001" id="Editor_5d3f61b" language="SQL" >
+			<string><![CDATA[CREATE TABLE carthafind.contains ( 
+	id                   int  NOT NULL  AUTO_INCREMENT,
+	id_project           int    ,
+	id_keyword           int    ,
+	CONSTRAINT pk_contains_id PRIMARY KEY ( id )
+ ) engine=InnoDB;
+
+CREATE INDEX idx_contains_id_project ON carthafind.contains ( id_project );
+
+CREATE INDEX idx_contains_id_keyword ON carthafind.contains ( id_keyword );
+
+ALTER TABLE carthafind.contains ADD CONSTRAINT fk_contains_project FOREIGN KEY ( id_project ) REFERENCES carthafind.project( id ) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+ALTER TABLE carthafind.contains ADD CONSTRAINT fk_contains_keyword FOREIGN KEY ( id_keyword ) REFERENCES carthafind.keyword( id ) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+]]></string>
+		</script>
+		<script name="contains_002" id="Editor_5bd028e" language="SQL" >
+			<string><![CDATA[INSERT INTO carthafind.contains
+	( id, id_project, id_keyword) VALUES ( ?, ?, ? );]]></string>
+		</script>
+		<script name="keyword" id="Editor_3e94a43" language="SQL" >
+			<string><![CDATA[CREATE TABLE carthafind.keyword ( 
+	id                   int  NOT NULL  AUTO_INCREMENT,
+	name                 varchar(20)    ,
+	CONSTRAINT pk_keyword_id PRIMARY KEY ( id )
+ ) engine=InnoDB;
+
+]]></string>
+		</script>
+		<script name="keyword_001" id="Editor_593e004" language="SQL" >
+			<string><![CDATA[INSERT INTO carthafind.keyword
+	( id, name) VALUES ( ?, ? );]]></string>
+		</script>
+		<script name="participates_001" id="Editor_2f277cf" language="SQL" >
+			<string><![CDATA[CREATE TABLE carthafind.participates ( 
+	id                   int  NOT NULL  AUTO_INCREMENT,
+	id_project           int    ,
+	id_author            int    ,
+	CONSTRAINT pk_participates_id PRIMARY KEY ( id )
+ ) engine=InnoDB;
+
+CREATE INDEX idx_participates_id_project ON carthafind.participates ( id_project );
+
+CREATE INDEX idx_participates_id_author ON carthafind.participates ( id_author );
+
+ALTER TABLE carthafind.participates ADD CONSTRAINT fk_participates_project FOREIGN KEY ( id_project ) REFERENCES carthafind.project( id ) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+ALTER TABLE carthafind.participates ADD CONSTRAINT fk_participates_author FOREIGN KEY ( id_author ) REFERENCES carthafind.author( id ) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+]]></string>
+		</script>
+		<script name="participates_002" id="Editor_141e9d6" language="SQL" >
+			<string><![CDATA[INSERT INTO carthafind.participates
+	( id, id_project, id_author) VALUES ( ?, ?, ? );]]></string>
+		</script>
+		<script name="project" id="Editor_10ff954" language="SQL" >
+			<string><![CDATA[CREATE TABLE carthafind.project ( 
+	id                   int  NOT NULL  AUTO_INCREMENT,
+	title                varchar(40)    ,
+	description          varchar(200)    ,
+	length               int    ,
+	final_vote           int    ,
+	progress             int    ,
+	comment              longtext    ,
+	id_responsabile      int    ,
+	CONSTRAINT pk_project_id PRIMARY KEY ( id )
+ ) engine=InnoDB;
+
+CREATE INDEX idx_project_id_responsabile ON carthafind.project ( id_responsabile );
+
+ALTER TABLE carthafind.project ADD CONSTRAINT fk_project_teacher FOREIGN KEY ( id_responsabile ) REFERENCES carthafind.teacher( id ) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+]]></string>
+		</script>
+		<script name="project_001" id="Editor_6811b" language="SQL" >
+			<string><![CDATA[CREATE TABLE carthafind.project ( 
+	id                   int  NOT NULL  AUTO_INCREMENT,
+	title                varchar(40)    ,
+	description          varchar(200)    ,
+	length               int    ,
+	final_vote           int    ,
+	progress             int    ,
+	comment              longtext    ,
+	id_responsabile      int    ,
+	CONSTRAINT pk_project_id PRIMARY KEY ( id )
+ ) engine=InnoDB;
+
+CREATE INDEX idx_project_id_responsabile ON carthafind.project ( id_responsabile );
+
+ALTER TABLE carthafind.project ADD CONSTRAINT fk_project_teacher FOREIGN KEY ( id_responsabile ) REFERENCES carthafind.teacher( id ) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+]]></string>
+		</script>
+		<script name="project_002" id="Editor_423ad7d" language="SQL" >
+			<string><![CDATA[CREATE TABLE carthafind.project ( 
+	id                   int  NOT NULL  AUTO_INCREMENT,
+	title                varchar(40)    ,
+	description          varchar(200)    ,
+	length               int    ,
+	final_vote           int    ,
+	progress             int    ,
+	comment              longtext    ,
+	id_responsabile      int    ,
+	CONSTRAINT pk_project_id PRIMARY KEY ( id )
+ ) engine=InnoDB;
+
+CREATE INDEX idx_project_id_responsabile ON carthafind.project ( id_responsabile );
+
+ALTER TABLE carthafind.project ADD CONSTRAINT fk_project_teacher FOREIGN KEY ( id_responsabile ) REFERENCES carthafind.teacher( id ) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+]]></string>
+		</script>
+		<script name="project_003" id="Editor_4398474" language="SQL" >
+			<string><![CDATA[INSERT INTO carthafind.project
+	( id, title, description, length, final_vote, progress, comment, id_responsabile) VALUES ( ?, ?, ?, ?, ?, ?, ?, ? );]]></string>
+		</script>
+		<script name="teacher" id="Editor_317d98e" language="SQL" >
+			<string><![CDATA[CREATE TABLE carthafind.teacher ( 
+	id                   int  NOT NULL  ,
+	CONSTRAINT pk_teacher_id PRIMARY KEY ( id )
+ ) engine=InnoDB;
+
+ALTER TABLE carthafind.teacher ADD CONSTRAINT fk_teacher_user FOREIGN KEY ( id ) REFERENCES carthafind.`user`( id ) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+]]></string>
+		</script>
+		<script name="teacher_001" id="Editor_339d554" language="SQL" >
+			<string><![CDATA[INSERT INTO carthafind.teacher
+	( id) VALUES ( ? );]]></string>
+		</script>
+		<script name="user" id="Editor_52893f9" language="SQL" >
+			<string><![CDATA[CREATE TABLE carthafind.`user` ( 
+	id                   int  NOT NULL  AUTO_INCREMENT,
+	name                 varchar(20)    ,
+	surname              varchar(20)    ,
+	granted              enum('Administrator','Registered','Normal')     ,
+	CONSTRAINT pk_user_id PRIMARY KEY ( id )
+ ) engine=InnoDB;
+
+]]></string>
+		</script>
+		<script name="user_001" id="Editor_2757f29" language="SQL" >
+			<string><![CDATA[INSERT INTO carthafind.`user`
+	( id, name, surname, granted) VALUES ( ?, ?, ?, ? );]]></string>
+		</script>
+		<browser id="Browse_14c4a47" name="participates" confirm_updates="y" confirmed="y" >
+			<browse_table schema="carthafind" entity="participates" x="20" y="20" width="400" height="330" />
+		</browser>
 	</layout>
 </project>

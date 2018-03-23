@@ -69,15 +69,15 @@
 			<column name="final_vote" type="int" jt="4" />
 			<column name="progress" type="int" jt="4" />
 			<column name="comment" type="longtext" length="300" jt="-1" />
-			<column name="id_responsabile" type="int" jt="4" />
+			<column name="id_responsible" type="int" length="10" decimal="0" jt="4" />
 			<index name="pk_project_id" unique="PRIMARY_KEY" >
 				<column name="id" />
 			</index>
 			<index name="idx_project_id_responsabile" unique="NORMAL" >
-				<column name="id_responsabile" />
+				<column name="id_responsible" />
 			</index>
 			<fk name="fk_project_teacher" to_schema="carthafind" to_table="teacher" >
-				<fk_column name="id_responsabile" pk="id" />
+				<fk_column name="id_responsible" pk="id" />
 			</fk>
 			<storage><![CDATA[engine=InnoDB]]></storage>
 		</table>
@@ -98,16 +98,24 @@
 			<column name="granted" type="enum" jt="12" >
 				<enumeration>&#039;Administrator&#039;,&#039;Registered&#039;,&#039;Normal&#039;</enumeration>
 			</column>
-			<column name="username" type="varchar" length="20" jt="12" />
-			<column name="password" type="varchar" length="20" jt="12" />
-			<column name="email" type="varchar" length="50" jt="12" />
+			<column name="username" type="varchar" length="20" decimal="0" jt="12" mandatory="y" />
+			<column name="password" type="binary" length="64" decimal="0" jt="-2" mandatory="y" />
+			<column name="email" type="varchar" length="50" decimal="0" jt="12" mandatory="y" />
 			<index name="pk_user_id" unique="PRIMARY_KEY" >
 				<column name="id" />
 			</index>
 			<storage><![CDATA[engine=InnoDB]]></storage>
 		</table>
+		<table name="verify" >
+			<column name="id" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="token" type="varchar" length="16" decimal="0" jt="12" mandatory="y" />
+			<index name="pk_verify" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+		</table>
 	</schema>
-	<connector name="" database="MySql" host="localhost" port="3306" user="root" />
+	<connector name="" database="MySql" driver_class="com.mysql.jdbc.Driver" driver_jar="mysql-connector-java-5.1.44-bin.jar" driver_desc="Standard" host="localhost" port="3306" user="root" />
+	<connector name="root" database="MySql" driver_class="com.mysql.jdbc.Driver" driver_jar="mysql-connector-java-5.1.44-bin.jar" driver_desc="Standard" host="localhost" port="3306" instance="carthafind" user="root" />
 	<layout name="Default Layout" id="Layout_4357094" show_relation="columns" >
 		<entity schema="carthafind" name="user" color="c1d8ee" x="210" y="255" />
 		<entity schema="carthafind" name="teacher" color="c1d8ee" x="75" y="315" />
@@ -116,6 +124,7 @@
 		<entity schema="carthafind" name="project" color="c1d8ee" x="45" y="45" />
 		<entity schema="carthafind" name="participates" color="c1d8ee" x="210" y="150" />
 		<entity schema="carthafind" name="contains" color="c1d8ee" x="210" y="45" />
+		<entity schema="carthafind" name="verify" color="c1d8ee" x="360" y="300" />
 		<script name="author" id="Editor_2334ca6" language="SQL" >
 			<string><![CDATA[CREATE TABLE carthafind.author ( 
 	id                   int  NOT NULL  ,
