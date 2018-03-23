@@ -70,6 +70,7 @@
 			<column name="progress" type="int" jt="4" />
 			<column name="comment" type="longtext" length="300" jt="-1" />
 			<column name="id_responsible" type="int" length="10" decimal="0" jt="4" />
+			<column name="doc_path" type="varchar" length="260" decimal="0" jt="12" mandatory="y" />
 			<index name="pk_project_id" unique="PRIMARY_KEY" >
 				<column name="id" />
 			</index>

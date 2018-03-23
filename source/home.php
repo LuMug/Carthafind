@@ -6,10 +6,105 @@ require_once 'dbconnect.php';
 $user = "";
 
 if(isset($_SESSION['user'])) {
-	$query = "SELECT `email` FROM `user` WHERE `id`=".$_SESSION['user'];
+	$query = "SELECT `username` FROM `user` WHERE `id`=".$_SESSION['user'];
 	$result = $conn->query($query);
 	$user = $result->fetch_assoc();
-	$user = $user['email'];
+	$user = $user['username'];
+}
+
+$title = "";
+$description = "";
+$responsible = "";
+$authors = "";
+$length = "";
+$final_vote = "";
+$progress = "";
+$comment = "";
+$doc_path = "";
+$titleError = "";
+$descriptionError = "";
+$responsibleError = "";
+$authorsError = "";
+$lengthError = "";
+$final_voteError = "";
+$progressError = "";
+$commentError = "";
+$doc_pathError = "";
+
+$error = false;
+
+if(isset($_POST['btn-login'])) {
+
+	$title = trim($_POST['title']);
+	$title = strip_tags($title);
+	$title = htmlspecialchars($title);
+
+	$description = trim($_POST['description']);
+	$description = strip_tags($description);
+	$description = htmlspecialchars($description);
+	
+	$responsible = trim($_POST['responsible']);
+	$responsible = strip_tags($responsible);
+	$responsible = htmlspecialchars($responsible);
+	
+	$authors = trim($_POST['authors']);
+	$authors = strip_tags($authors);
+	$authors = htmlspecialchars($authors);
+	
+	$length = trim($_POST['length']);
+	$length = strip_tags($length);
+	$length = htmlspecialchars($length);
+	
+	$final_vote = trim($_POST['final_vote']);
+	$final_vote = strip_tags($final_vote);
+	$final_vote = htmlspecialchars($final_vote);
+	
+	$progress = trim($_POST['progress']);
+	$progress = strip_tags($progress);
+	$progress = htmlspecialchars($progress);
+	
+	$comment = trim($_POST['comment']);
+	$comment = strip_tags($comment);
+	$comment = htmlspecialchars($comment);
+	
+	$doc_path = trim($_POST['doc_path']);
+	$doc_path = strip_tags($doc_path);
+	$doc_path = htmlspecialchars($doc_path);
+
+	if(empty($title)){
+		$error = true;
+		$titleError = "Inserisci un titolo.";
+	}
+	
+	if(empty($description)){
+		$error = true;
+		$descriptionError = "Inserisci una descrizione.";
+	}
+
+	if(empty($responsible)){
+		$error = true;
+		$responsibleError = "Inserisci un responsabile.";
+	} else if (strlen($responsible) < 3) {
+		$error = true;
+		$responsibleError = "Il nome e cognome del responsabile devono essere formati da almeno tre lettere.";
+	} else if (!preg_match("/^[a-zA-Z ]+$/",$responsible)) {
+		$error = true;
+		$nameError = "Il nome e cognome del responsabile devono contenere lettere dell'alfabeto.";
+	}
+	
+	if(empty($responsible)){
+		$error = true;
+		$responsibleError = "Inserisci un responsabile.";
+	}
+
+	if (!$error) {
+		$query = "SELECT `id_responsible` FROM USER"
+		
+		$query = "INSERT INTO `project` (`title`, `description`, `length`, `final_vote`, `progress`, `comment`, `id_responsible`, `doc_path`) VALUES
+		('".$title."', '".$description."', '".$description."', '".$length."','".$final_vote
+		."','".$progress."','".$comment."','".$id_responsible."','".$doc_path."')";
+		$result = $conn->query($query);
+	}
 }
 ?>
 <!DOCTYPE html>
@@ -151,6 +246,99 @@ if(isset($_SESSION['user'])) {
 						</div>
 					</div>
 				</div>
+				<div class="container" style="padding-top: 3%;">
+					<div>
+						<form method="post" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" autocomplete="off" id="insert">
+							<div class="col-md-12">
+								<div class="page-header">
+									<h3>Aggiungi un progetto</h3>
+								</div>
+								
+								<div class="form-group">
+									<div class="input-group">
+										<span class="input-group-addon"><span class="glyphicon glyphicon-font"></span></span>
+										<input type="text" name="title" class="form-control" placeholder="Titolo" value="<?php  ?>" maxlength="40"/>
+									</div>
+									<span class="text-danger"><?php  ?></span>
+								</div>
+								
+								<div class="form-group">
+									<div class="input-group">
+										<span class="input-group-addon"><span class="glyphicon glyphicon-pencil"></span></span>
+										<input type="text" name="description" class="form-control" placeholder="Descrizione" value="<?php  ?>" maxlength="200"/>
+									</div>
+									<span class="text-danger"><?php  ?></span>
+								</div>
+								
+								<div class="form-group">
+									<div class="input-group">
+										<span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>
+										<input type="text" name="responsible" class="form-control" placeholder="Responsabile" value="<?php  ?>" maxlength="40"/>
+									</div>
+									<span class="text-danger"><?php  ?></span>
+								</div>
+								
+								<div class="form-group">
+									<div class="input-group">
+										<span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>
+										<input type="text" name="authors" class="form-control" placeholder="Autore/i (Separati da , se multipli)" value="<?php  ?>" maxlength="40"/>
+									</div>
+									<span class="text-danger"><?php  ?></span>
+								</div>
+								
+								<div class="form-group">
+									<div class="input-group">
+										<span class="input-group-addon"><span class="glyphicon glyphicon-time"></span></span>
+										<input type="number" name="length" class="form-control" placeholder="Durata (In ore)" value="<?php  ?>" maxlength="200"/>
+									</div>
+									<span class="text-danger"><?php  ?></span>
+								</div>
+								
+								<div class="form-group">
+									<div class="input-group">
+										<span class="input-group-addon"><span class="glyphicon glyphicon-ok"></span></span>
+										<input type="number" name="final_vote" class="form-control" placeholder="Voto finale" value="<?php  ?>" maxlength="200"/>
+									</div>
+									<span class="text-danger"><?php  ?></span>
+								</div>
+								
+								<div class="form-group">
+									<div class="input-group">
+										<span class="input-group-addon"><span class="glyphicon glyphicon-stats"></span></span>
+										<input type="number" name="progress" class="form-control" placeholder="Completamento (In numero intero da 1 a 100)" value="<?php  ?>" maxlength="200"/>
+									</div>
+									<span class="text-danger"><?php  ?></span>
+								</div>
+								
+								<div class="form-group">
+									<div class="input-group">
+										<span class="input-group-addon"><span class="glyphicon glyphicon-comment"></span></span>
+										<textarea name="comment" form="insert" class="form-control" placeholder="Commenti..."></textarea>
+									</div>
+									<span class="text-danger"><?php  ?></span>
+								</div>
+								
+								<div class="form-group">
+									<div class="input-group">
+										<span class="input-group-addon"><span class="glyphicon glyphicon-paperclip"></span></span>
+										<label class="btn btn-default btn-file">
+											<input type="file" name="doc_path">
+										</label>
+									</div>
+									<span class="text-danger"><?php  ?></span>
+								</div>
+								
+								<div class="form-group">
+									<hr/>
+								</div>
+								
+								<div class="form-group">
+									<button type="submit" class="btn btn-block btn-primary" name="btn-login">Invia</button>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
 			<?php } ?>
 		</div>
 	</div>
@@ -170,7 +358,7 @@ if(isset($_SESSION['user'])) {
 			</div>
 		</div>
 	</div>
-	<footer style="position: absolute;bottom: 0;width: 100%;height: 60px;line-height: 60px; background-color: #f5f5f5">
+	<footer style="position: relative;bottom: 0;width: 100%;height: 60px;line-height: 60px; background-color: #f5f5f5">
 		<div class="footer-copyright py-3 text-center">
 			© 2018 Copyright: Nadir Barlozzo
 		</div>
