@@ -67,10 +67,15 @@ if(isset($_POST['btn-login'])) {
 	$comment = strip_tags($comment);
 	$comment = htmlspecialchars($comment);
 	
-	$doc_path = trim($_POST['doc_path']);
-	$doc_path = strip_tags($doc_path);
-	$doc_path = htmlspecialchars($doc_path);
-
+	
+	$doc_path = $_POST['doc_path'];
+	$parts = explode("\\", $doc_path);
+	$doc_path = "";
+	
+	foreach($parts as $part) {
+		$doc_path .= $part."\\\\";
+	}
+	
 	if(empty($title)){
 		$error = true;
 		$titleError = "Inserisci un titolo.";
@@ -98,11 +103,13 @@ if(isset($_POST['btn-login'])) {
 	}
 
 	if (!$error) {
-		$query = "SELECT `id_responsible` FROM USER"
-		
+		$query = "SELECT `id` FROM `user` WHERE `name` ='".$responsible."'";
+		$result = $conn->query($query);
+		$id_responsible = $result->fetch_assoc();
+		$id_responsible = $id_responsible['id'];
+				
 		$query = "INSERT INTO `project` (`title`, `description`, `length`, `final_vote`, `progress`, `comment`, `id_responsible`, `doc_path`) VALUES
-		('".$title."', '".$description."', '".$description."', '".$length."','".$final_vote
-		."','".$progress."','".$comment."','".$id_responsible."','".$doc_path."')";
+		('".$title."', '".$description."',".$length.",".$final_vote.",".$progress.",'".$comment."',".$id_responsible.",'".$doc_path."')";
 		$result = $conn->query($query);
 	}
 }
@@ -110,8 +117,8 @@ if(isset($_POST['btn-login'])) {
 <!DOCTYPE html>
 <html>
 <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	<title>Welcome - <?php echo $user ?></title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+	<title>Benvenuto - <?php echo $user ?></title>
 	<link rel="stylesheet" href="assets/css/bootstrap.min.css" type="text/css"/>
 	<link rel="stylesheet" href="style.css" type="text/css"/>
 </head>
@@ -202,7 +209,6 @@ if(isset($_POST['btn-login'])) {
 										<tr class="project-container" data-toggle="modal" data-target="#projectModal" style="cursor: pointer; user-select: none;"
 											onclick="
 												$('.modal-title').text('<?php echo $row['title']; ?>');
-
 											"
 										>
 											<td><?php echo $row['title']; ?></td>
@@ -210,11 +216,11 @@ if(isset($_POST['btn-login'])) {
 											<td>
 												<?php
 												$query = "SELECT `id_responsible` FROM `project` WHERE `id`='".$row['id']."'";
-												$result = $conn->query($query);
+												$result2 = $conn->query($query);
 
 												$query = "SELECT `name`, `surname` FROM `user` WHERE `id`='".$row['id_responsible']."'";
-												$result = $conn->query($query);
-												$row2 = $result->fetch_assoc();
+												$result2 = $conn->query($query);
+												$row2 = $result2->fetch_assoc();
 
 												echo $row2['name']." ".$row2['surname'];
 												?>
@@ -222,12 +228,12 @@ if(isset($_POST['btn-login'])) {
 											<td>
 												<?php
 												$query = "SELECT `id_author` FROM `participates` WHERE `id_project`='".$row['id']."'";
-												$result2 = $conn->query($query);
+												$result3 = $conn->query($query);
 
-												while($row2 = $result2->fetch_assoc()) {
+												while($row2 = $result3->fetch_assoc()) {
 													$query = "SELECT `name`, `surname` FROM `user` WHERE `id`='".$row2['id_author']."'";
-													$result = $conn->query($query);
-													$row3 = $result->fetch_assoc();
+													$result4 = $conn->query($query);
+													$row3 = $result4->fetch_assoc();
 
 													echo $row3['name']." ".$row3['surname'].",<br>";
 												}
@@ -281,7 +287,7 @@ if(isset($_POST['btn-login'])) {
 								<div class="form-group">
 									<div class="input-group">
 										<span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>
-										<input type="text" name="authors" class="form-control" placeholder="Autore/i (Separati da , se multipli)" value="<?php  ?>" maxlength="40"/>
+										<input type="text" name="authors" class="form-control" placeholder="Autore/i (Separati da , se multipli)" value="<?php  ?>" maxlength="100"/>
 									</div>
 									<span class="text-danger"><?php  ?></span>
 								</div>
