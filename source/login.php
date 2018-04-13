@@ -77,7 +77,7 @@ if(isset($_POST['btn-login'])) {
 					</div>
 
 					<?php
-					if ( isset($outMessage) ) {
+					if (isset($outMessage)) {
 					?>
 						<div class="form-group">
 							<div class="alert alert-danger">

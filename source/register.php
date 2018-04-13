@@ -4,11 +4,11 @@ session_start();
 include_once 'dbconnect.php';
 
 function getToken($length){
-     $token = "";
-     $codeAlphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-     $codeAlphabet.= "abcdefghijklmnopqrstuvwxyz";
-     $codeAlphabet.= "0123456789";
-     $max = strlen($codeAlphabet);
+    $token = "";
+    $codeAlphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    $codeAlphabet.= "abcdefghijklmnopqrstuvwxyz";
+    $codeAlphabet.= "0123456789";
+    $max = strlen($codeAlphabet);
 
     for ($i=0; $i < $length; $i++) {
         $token .= $codeAlphabet[random_int(0, $max-1)];
@@ -20,9 +20,9 @@ function getToken($length){
 function sendMail($id, $email, $token) {
     // SMTP SERVER CONFIGURATION TO DO
 	$subject = "Conferma registrazione per Carthafind.ch";
-	$from = 'decima@carthafind.ch';
 	$to = $email;
-	$headers = "Da: ".$from;
+	$headers = "Da: decima@carthafind.ch\r\n";
+	$headers .= "Content-Type: text/html; charset=UTF-8\r\n";
 	$body="Il suo codice di attivazione è '".$token."'. Perfavore vada al seguente <a href='localhost:3600/Carthafind/verify.php?id=".$id."&token=".$token."'>link</a> per completare l'attivazione del suo account";
 	mail($to, $subject, $body, $headers);
 }
