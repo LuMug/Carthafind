@@ -62,12 +62,19 @@ if(isset($_POST['btn-login'])) {
 	$comment = strip_tags($comment);
 	$comment = htmlspecialchars($comment);
 	
-	$doc_path = $_POST['doc_path'];
-	$parts = explode("\\", $doc_path);
-	$doc_path = "";
-	
-	foreach($parts as $part) {
-		$doc_path .= $part."\\\\";
+	$extensions = array("pdf", "doc", "docx");
+			
+	$explodedExt = explode('.', $_FILES['doc_path']['name']);	
+	$file_ext = strtolower(end($explodedExt));
+	$doc_path = $_FILES['doc_path']['name'];
+		
+	if(!isset($_FILES['doc_path']) || !is_uploaded_file($_FILES['doc_path']['tmp_name'])) {
+		$error = true;
+		$doc_pathError = "Carica un file di documentazione (.pdf o .doc/x)";
+	}
+	else if(in_array($file_ext, $extensions) === false) {
+		$error = true;
+		$doc_pathError = "Il file di documentazione può avere solo le estensioni .pdf, .doc o .docx";
 	}
 	
 	if(empty($title)){
@@ -85,7 +92,7 @@ if(isset($_POST['btn-login'])) {
 	}
 	else if(strlen($description) < 10) {
 		$error = true;
-		$titleError = "La descrizione deve essere composta da almeno 10 caratteri.";
+		$descriptionError = "La descrizione deve essere composta da almeno 10 caratteri.";
 	}
 	
 	if(empty($length)){
@@ -102,18 +109,44 @@ if(isset($_POST['btn-login'])) {
 		$error = true;
 		$progressError = "Inserisci una % di completamento.";
 	}
-	
-	if (!$error) {
-		$responsible = explode(" ", $responsible);
 		
-		$query = "SELECT `id` FROM `user` WHERE `name` ='".$responsible[0]."'";
+	if (!$error) {	
+		$uploaddir = 'C:/xampp/htdocs/Carthafind/documentations/';
+		$userfile_tmp = $_FILES['doc_path']['tmp_name'];
+		$userfile_name = $_FILES['doc_path']['name'];
+		move_uploaded_file($userfile_tmp, $uploaddir . $userfile_name);
+		
+		$responsible = explode(" ", $responsible);
+			
+		$query = "SELECT `id` FROM `user` WHERE `name` ='".$responsible[0]."' AND `surname`='".$responsible[1]."'";
 		$result = $conn->query($query);
 		$id_responsible = $result->fetch_assoc();
 		$id_responsible = $id_responsible['id'];
-				
+		
 		$query = "INSERT INTO `project` (`title`, `description`, `length`, `final_vote`, `progress`, `comment`, `id_responsible`, `doc_path`) VALUES
-		('".$title."', '".$description."',".$length.",".$final_vote.",".$progress.",'".$comment."',".$id_responsible.",'".$doc_path."')";
+		('".$title."', '".$description."',".$length.",".$final_vote.",".$progress.",'".$comment."',".$id_responsible.",'documentations/".$doc_path."')";
+		$conn->query($query);
+		
+		$query = "SELECT `id` FROM `project` ORDER BY `id` DESC LIMIT 1";
 		$result = $conn->query($query);
+		$projectId = $result->fetch_assoc();
+		$projectId = $projectId['id'];
+		
+		$authors = explode(",", $authors);
+		
+		foreach($authors as $auth) {
+			$authA = explode(" ", $auth);
+			
+			if($authA[0] != "") {
+				$query = "SELECT `id` FROM `user` WHERE `name`='".$authA[0]."' AND `surname`='".$authA[1]."'";
+				$result2 = $conn->query($query);
+				$authI = $result2->fetch_assoc();
+				$authI = $authI['id'];
+				
+				$query = "INSERT INTO `participates` (`id_project`, `id_author`) VALUES (".$projectId.",".$authI.")";
+				$conn->query($query);
+			}
+		}
 	}
 }
 ?>
@@ -124,6 +157,7 @@ if(isset($_POST['btn-login'])) {
 	<title>Benvenuto - <?php echo $user['username']; ?></title>
 	<link rel="stylesheet" href="assets/css/bootstrap.min.css" type="text/css"/>
 	<link rel="stylesheet" href="style.css" type="text/css"/>
+	<link href="assets/lib/css/multi-select.css" media="screen" rel="stylesheet" type="text/css">
 </head>
 <body>
 	<nav class="navbar navbar-default navbar-fixed-top">
@@ -263,7 +297,7 @@ if(isset($_POST['btn-login'])) {
 				<?php if($user['granted'] == "Administrator") { ?>
 					<div class="container" style="padding-top: 3%;">
 						<div>
-							<form method="post" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" autocomplete="off" id="insert">
+							<form method="post" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" autocomplete="off" id="insert" enctype="multipart/form-data">
 								<div class="col-md-12">
 									<div class="page-header">
 										<h3>Aggiungi un progetto</h3>
@@ -316,8 +350,7 @@ if(isset($_POST['btn-login'])) {
 									
 									<div class="form-group">
 										<div class="input-group">
-											<span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>
-											<select class="btn btn-default form-control" name="authors">
+											<select class="btn btn-default form-control" id='authors-select' multiple='multiple'>
 												<?php
 												$query = "SELECT `id` FROM `author`";
 												$result = $conn->query($query);
@@ -337,6 +370,7 @@ if(isset($_POST['btn-login'])) {
 												}
 												?>
 											</select>
+											<input type="text" name="authors" id="authors" style="display:none" value="">
 										</div>
 										<span class="text-danger"><?php echo $authorsError; ?></span>
 									</div>
@@ -381,10 +415,11 @@ if(isset($_POST['btn-login'])) {
 										<div class="input-group">
 											<span class="input-group-addon"><span class="glyphicon glyphicon-paperclip"></span></span>
 											<label class="btn btn-default btn-file">
-												<input type="file" name="doc_path">
+												<input type="hidden" name="MAX_FILE_SIZE" value="30000"/>
+												<input type="file" name="doc_path"/>
 											</label>
 										</div>
-										<span class="text-danger"><?php  ?></span>
+										<span class="text-danger"><?php echo $doc_pathError; ?></span>
 									</div>
 									
 									<div class="form-group">
@@ -401,7 +436,7 @@ if(isset($_POST['btn-login'])) {
 				<?php } ?>
 			<?php } ?>
 		</div>
-	</div>
+	</div> 
 	<div class="modal fade" id="projectModal" role="dialog">
 		<div class="modal-dialog">
 			<div class="modal-content">
@@ -427,6 +462,16 @@ if(isset($_POST['btn-login'])) {
 	<script src="assets/jquery-1.11.3-jquery.min.js"></script>
 	<script src="assets/js/bootstrap.min.js"></script>
 	<script src="assets/js/finder.js"></script>
+	<script src="assets/lib/js/jquery.multi-select.js"></script>
+	<script>
+	$('#authors-select').multiSelect({
+		selectableHeader: "<div class='custom-header'>Alunni</div>",
+		selectionHeader: "<div class='custom-header'>Autori</div>",
+		afterSelect: function(values) {
+			$('#authors').val($('#authors').val()+values+",");
+		}
+	});
+	</script>
 </body>
 </html>
 <?php ob_end_flush(); ?>
