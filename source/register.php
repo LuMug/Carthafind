@@ -95,7 +95,7 @@ if (isset($_POST['btn-signup'])) {
 		$error = true;
 		$usernameError = "Il nome utente deve contenere almeno tre lettere.";
 	}
-
+	
 	if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
 		$error = true;
 		$emailError = "Inserisci un'email valida.";
@@ -142,6 +142,11 @@ if (isset($_POST['btn-signup'])) {
 			$result = $conn->query($query);
 
 			sendMail($id, $email, $token);
+			
+			unset($name);
+			unset($surname);
+			unset($email);
+			unset($username);
 		} else {
 			$outType = "danger";
 			$outMessage = "Qualcosa è andato storto, riprova o segnala il problema ad uno degli amministratori.";

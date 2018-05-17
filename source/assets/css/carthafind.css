@@ -1,0 +1,100 @@
+@charset "utf-8";
+
+* {
+	margin:0;
+	padding:0;
+}
+
+#login-form {
+	margin:5% auto;
+	max-width:500px;
+}
+
+#wrapper {
+	padding-top: 50px;
+}
+
+.tag-box {
+	list-style: none;
+	padding: 3px;
+	margin: 0;
+	display: inline-block;
+	font-family: arial;
+	width: 100%;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+}
+
+.tag-box * {
+	transition-property: all;
+	transition-duration: 0.3s;
+}
+
+.tag-box li {
+	padding: 4px 6px;
+	display: inline-block;
+}
+
+.tag-box li.tags {
+	background: #286090;
+	color: #fff;
+	border-radius: 4px;
+	margin: 4px 3px;
+	position: relative;
+}
+
+.tag-box li.tags .close {
+	display: inline-block;
+	position: absolute;
+	color: #fff;
+	width: 0;
+	right: 0;
+	height: 10px;
+	cursor: pointer;
+	top: 2px;
+}
+
+.tag-box li.tags .close:after {
+	content: 'x';
+}
+
+.tag-box li.tags.edit {
+	background: none;
+	border: 1px solid #286090;
+	color: #286090;
+}
+
+.tag-box li.tags.edit .input-tag {
+	height: auto;
+}
+
+.tag-box li.tags.edit:hover {
+	padding: 4px 6px;
+}
+
+.tag-box li.tags.danger {
+	background: #F00;
+	opacity: 0.8;
+}
+
+.tag-box li.tags:hover {
+	padding-right: 18px;
+}
+
+.tag-box li.tags:hover .close {
+	width: 14px;
+}
+
+.tag-box li .input-tag {
+	color: black;
+	height: 24px;
+	vertical-align: middle;
+	border: none;
+	outline: none;
+	background: none;
+}
+
+.tag-box li .input-tag:hover, .tag-box li .input-tag:focus {
+	outline: none;
+	border: none;
+}

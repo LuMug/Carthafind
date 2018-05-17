@@ -11,6 +11,7 @@ if(isset($_SESSION['user'])) {
 	$user = $result->fetch_assoc();
 }
 
+//UPDATE
 $title = "";
 $description = "";
 $responsible = "";
@@ -19,6 +20,7 @@ $length = "";
 $final_vote = "";
 $progress = "";
 $comment = "";
+$keywords = "";
 $doc_path = "";
 $titleError = "";
 $descriptionError = "";
@@ -28,6 +30,7 @@ $lengthError = "";
 $final_voteError = "";
 $progressError = "";
 $commentError = "";
+$keywordsError = "";
 $doc_pathError = "";
 
 $error = false;
@@ -62,19 +65,29 @@ if(isset($_POST['btn-login'])) {
 	$comment = strip_tags($comment);
 	$comment = htmlspecialchars($comment);
 	
+	//UPDATE
+	$keywords = $_POST['keywords'];
+	
 	$extensions = array("pdf", "doc", "docx");
-			
+	
 	$explodedExt = explode('.', $_FILES['doc_path']['name']);	
 	$file_ext = strtolower(end($explodedExt));
 	$doc_path = $_FILES['doc_path']['name'];
-		
-	if(!isset($_FILES['doc_path']) || !is_uploaded_file($_FILES['doc_path']['tmp_name'])) {
+	
+	//UPDATE
+	if(empty($_POST['keywords'])) {
 		$error = true;
-		$doc_pathError = "Carica un file di documentazione (.pdf o .doc/x)";
+		$keywordsError = "Inserisci almeno una parola chiave.";
 	}
-	else if(in_array($file_ext, $extensions) === false) {
+	
+	
+	if(!isset($_FILES['doc_path'])) {
 		$error = true;
-		$doc_pathError = "Il file di documentazione può avere solo le estensioni .pdf, .doc o .docx";
+		$doc_pathError = "Carica un file di documentazione (.pdf o .doc/x).";
+	}
+	else if(in_array($file_ext, $extensions) == false) {
+		$error = true;
+		$doc_pathError = "Il file di documentazione può avere solo le estensioni pdf, doc o docx.";
 	}
 	
 	if(empty($title)){
@@ -109,13 +122,13 @@ if(isset($_POST['btn-login'])) {
 		$error = true;
 		$progressError = "Inserisci una % di completamento.";
 	}
-		
+				
 	if (!$error) {	
 		$uploaddir = 'C:/xampp/htdocs/Carthafind/documentations/';
 		$userfile_tmp = $_FILES['doc_path']['tmp_name'];
 		$userfile_name = $_FILES['doc_path']['name'];
 		move_uploaded_file($userfile_tmp, $uploaddir . $userfile_name);
-		
+				
 		$responsible = explode(" ", $responsible);
 			
 		$query = "SELECT `id` FROM `user` WHERE `name` ='".$responsible[0]."' AND `surname`='".$responsible[1]."'";
@@ -132,6 +145,35 @@ if(isset($_POST['btn-login'])) {
 		$projectId = $result->fetch_assoc();
 		$projectId = $projectId['id'];
 		
+		$keywords = explode(",", $keywords);
+		
+		//UPDATE
+		foreach($keywords as $key) {
+			$key = strtolower($key);
+		
+			$query = "SELECT `id` FROM `keyword` WHERE `name`='".$key."'";
+			$result = $conn->query($query);
+			
+			$kId = 0;
+			
+			if($result->num_rows > 0) {
+				$kId = $result->fetch_assoc();
+				$kId = $kId['id'];
+			} 
+			else {
+				$query = "INSERT INTO `keyword` (`name`) VALUES ('".$key."')";
+				$conn->query($query);
+				
+				$query = "SELECT `id` FROM `keyword` ORDER BY `id` DESC LIMIT 1";
+				$result2 = $conn->query($query);
+				$kId = $result2->fetch_assoc();
+				$kId = $kId['id'];
+			}
+		
+			$query = "INSERT INTO `contains` (`id_project`, `id_keyword`) VALUES (".$projectId.",".$kId.")";
+			$conn->query($query);
+		}
+		
 		$authors = explode(",", $authors);
 		
 		foreach($authors as $auth) {
@@ -147,6 +189,19 @@ if(isset($_POST['btn-login'])) {
 				$conn->query($query);
 			}
 		}
+		
+		//UPDATE
+		unset($title);
+		unset($description);
+		unset($responsible);
+		unset($authors);
+		unset($length);
+		unset($final_vote);
+		unset($progress);
+		unset($comment);
+		unset($keywords);
+		unset($doc_path);
+		header("Location: http://localhost:3600/Carthafind/home.php#form-title");
 	}
 }
 ?>
@@ -154,9 +209,9 @@ if(isset($_POST['btn-login'])) {
 <html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-	<title>Benvenuto - <?php echo $user['username']; ?></title>
+	<title>Benvenuto <?php if($user != "") { echo " - ".$user['username']; } ?></title>
 	<link rel="stylesheet" href="assets/css/bootstrap.min.css" type="text/css"/>
-	<link rel="stylesheet" href="style.css" type="text/css"/>
+	<link rel="stylesheet" href="assets/css/carthafind.css" type="text/css"/>
 	<link href="assets/lib/css/multi-select.css" media="screen" rel="stylesheet" type="text/css">
 </head>
 <body>
@@ -206,6 +261,12 @@ if(isset($_POST['btn-login'])) {
 				<p>
 					Potete inoltre tramite la barra di ricerca filtrare i prodotti tramite parole chiavi così da avere solo quelli che più vi interessano.
 				</p>
+				<?php
+				if($user == "") {
+					echo "<p><b>Per iniziare, esegui il login premendo il bottone in alto a destra o registrati con il collegamento
+					che potrai trovare su quella pagina.</b></p>";
+				}	
+				?>
 			</div>
 			<?php if($user != "") { ?>
 				<?php if($user['granted'] == "Registered" || $user['granted'] == "Administrator") { ?>
@@ -214,7 +275,7 @@ if(isset($_POST['btn-login'])) {
 							<div class="col-md-3">
 								<form action="#" method="get">
 									<div class="input-group">
-										<input class="form-control" id="system-search" name="q" placeholder="Cerca per" required>
+										<input class="form-control" id="system-search" name="q" placeholder="Cerca per" autocomplete="off">
 										<span class="input-group-btn">
 											<button type="submit" class="btn btn-default"><i class="glyphicon glyphicon-search"></i></button>
 										</span>
@@ -243,20 +304,32 @@ if(isset($_POST['btn-login'])) {
 										$result = $conn->query($query);
 
 										while($row = $result->fetch_assoc()) {
+											//UPDATE
+											$query = "SELECT `id_keyword` FROM `contains` WHERE `id_project`='".$row['id']."'";
+											$keyIds = $conn->query($query);
+											
+											$metadata = "";
+											
+											while($key = $keyIds->fetch_assoc()) {
+												$query = "SELECT `name` FROM `keyword` WHERE `id`='".$key['id_keyword']."'";
+												$kname = $conn->query($query);
+												$kname = $kname->fetch_assoc();
+												$kname = $kname['name'];
+												
+												$metadata .= $kname.",";
+											}
 										?>
-											<tr class="project-container" data-toggle="modal" data-target="#projectModal" style="cursor: pointer; user-select: none;"
-												onclick="
-													$('.modal-title').text('<?php echo $row['title']; ?>');
-													$('#documentation').text('<?php echo $row['doc_path']; ?>');
-												"
-											>
+											<!-- UPDATE -->
+											<tr class="project-container" data-toggle="modal" data-target=".projectModal" style="cursor: pointer; user-select: none;"
+												data-title="<?php echo $row['title']; ?>" data-file="<?php echo $row['doc_path']; ?>"
+												data-keywords="<?php echo $metadata; ?>">
+												
 												<td><?php echo $row['title']; ?></td>
 												<td><?php echo $row['description']; ?></td>
 												<td>
 													<?php
 													$query = "SELECT `id_responsible` FROM `project` WHERE `id`='".$row['id']."'";
 													$result2 = $conn->query($query);
-
 													$query = "SELECT `name`, `surname` FROM `user` WHERE `id`='".$row['id_responsible']."'";
 													$result2 = $conn->query($query);
 													$row2 = $result2->fetch_assoc();
@@ -297,9 +370,9 @@ if(isset($_POST['btn-login'])) {
 				<?php if($user['granted'] == "Administrator") { ?>
 					<div class="container" style="padding-top: 3%;">
 						<div>
-							<form method="post" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" autocomplete="off" id="insert" enctype="multipart/form-data">
+							<form method="post" action="<?php echo htmlspecialchars("http://localhost:3600/Carthafind/home.php#form-title"); ?>" autocomplete="off" id="insert" enctype="multipart/form-data">
 								<div class="col-md-12">
-									<div class="page-header">
+									<div class="page-header" id="form-title">
 										<h3>Aggiungi un progetto</h3>
 									</div>
 									
@@ -378,7 +451,7 @@ if(isset($_POST['btn-login'])) {
 									<div class="form-group">
 										<div class="input-group">
 											<span class="input-group-addon"><span class="glyphicon glyphicon-time"></span></span>
-											<input type="number" name="length" class="form-control"
+											<input type="number" name="length" class="form-control" onkeypress="return isNumberKey(event)"
 												placeholder="Durata (In ore)" value="<?php echo $length; ?>" maxlength="200"/>
 										</div>
 										<span class="text-danger"><?php echo $lengthError; ?></span>
@@ -387,7 +460,7 @@ if(isset($_POST['btn-login'])) {
 									<div class="form-group">
 										<div class="input-group">
 											<span class="input-group-addon"><span class="glyphicon glyphicon-ok"></span></span>
-											<input type="number" name="final_vote" class="form-control"
+											<input type="text" name="final_vote" class="form-control" onkeypress="return isNumberKey(event)"
 												placeholder="Voto finale" value="<?php echo $final_vote; ?>" maxlength="200"/>
 										</div>
 										<span class="text-danger"><?php echo $final_voteError; ?></span>
@@ -396,7 +469,7 @@ if(isset($_POST['btn-login'])) {
 									<div class="form-group">
 										<div class="input-group">
 											<span class="input-group-addon"><span class="glyphicon glyphicon-stats"></span></span>
-											<input type="number" name="progress" class="form-control"
+											<input type="text" name="progress" class="form-control" onkeypress="return isNumberKey(event)"
 												placeholder="Completamento (In numero intero da 1 a 100)" value="<?php echo $progress; ?>" maxlength="200"/>
 										</div>
 										<span class="text-danger"><?php echo $progressError; ?></span>
@@ -413,9 +486,20 @@ if(isset($_POST['btn-login'])) {
 									
 									<div class="form-group">
 										<div class="input-group">
+											<span class="input-group-addon"><span class="glyphicon glyphicon-th-large"></span></span>
+											<textarea name="keywords" style="display:none" form="insert" class="tagarea"
+												placeholder="Parole chiave, separate dal carattere spazio" value="<?php echo $keywords; ?>">
+												SAMT
+											</textarea>
+										</div>
+										<span class="text-danger"><?php echo $keywordsError; ?></span>
+									</div>
+									
+									<div class="form-group">
+										<div class="input-group">
 											<span class="input-group-addon"><span class="glyphicon glyphicon-paperclip"></span></span>
 											<label class="btn btn-default btn-file">
-												<input type="hidden" name="MAX_FILE_SIZE" value="30000"/>
+												<input type="hidden" name="MAX_FILE_SIZE" value="30000000000000"/>
 												<input type="file" name="doc_path"/>
 											</label>
 										</div>
@@ -437,15 +521,15 @@ if(isset($_POST['btn-login'])) {
 			<?php } ?>
 		</div>
 	</div> 
-	<div class="modal fade" id="projectModal" role="dialog">
+	<div class="modal fade projectModal" role="dialog">
 		<div class="modal-dialog">
 			<div class="modal-content">
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal">&times;</button>
-					<h4 class="modal-title"></h4>
+					<h4 class="modal-title" id="doc_title"></h4>
 				</div>
 				<div class="modal-body">
-					<a id="documentation"></a>
+					<a id="doc_file" download></a>
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-default" data-dismiss="modal">Chiudi</button>
@@ -461,17 +545,9 @@ if(isset($_POST['btn-login'])) {
 
 	<script src="assets/jquery-1.11.3-jquery.min.js"></script>
 	<script src="assets/js/bootstrap.min.js"></script>
-	<script src="assets/js/finder.js"></script>
+	<script src="assets/js/carthafind.js"></script>
 	<script src="assets/lib/js/jquery.multi-select.js"></script>
-	<script>
-	$('#authors-select').multiSelect({
-		selectableHeader: "<div class='custom-header'>Alunni</div>",
-		selectionHeader: "<div class='custom-header'>Autori</div>",
-		afterSelect: function(values) {
-			$('#authors').val($('#authors').val()+values+",");
-		}
-	});
-	</script>
+	
 </body>
 </html>
 <?php ob_end_flush(); ?>
