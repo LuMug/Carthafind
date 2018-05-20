@@ -107,7 +107,6 @@ $(document).ready(function() {
 		res = res.replace($(this).parent().get(0).textContent, "");
 		res = res.replace("," + $(this).parent().get(0).textContent + ",", "");
 		$(".tagarea").val(res);
-		console.log($(".tagarea").val());
 	});
 	
 	$(".tag-box").click(function() {

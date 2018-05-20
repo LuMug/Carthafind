@@ -18,12 +18,12 @@ function getToken($length){
 }
 
 function sendMail($id, $email, $token) {
-    // SMTP SERVER CONFIGURATION TO DO
 	$subject = "Conferma registrazione per Carthafind.ch";
 	$to = $email;
 	$headers = "From: decima@carthafind.ch\r\n";
 	$headers .= "Content-Type: text/html; charset=UTF-8\r\n";
-	$body="Perfavore vada al seguente <a href='localhost:3600/Carthafind/verify.php?id=".$id."&token=".$token."'>link</a> per completare l'attivazione del suo account Carthafind";
+	$body="Perfavore vada al seguente <a href='localhost:3600/Carthafind/verify.php?id=".$id."&token=".$token
+		."'>link</a> per completare l'attivazione del suo account Carthafind";
 	mail($to, $subject, $body, $headers);
 }
 

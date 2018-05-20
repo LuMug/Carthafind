@@ -147,7 +147,6 @@ if(isset($_POST['btn-login'])) {
 		
 		$keywords = explode(",", $keywords);
 		
-		//UPDATE
 		foreach($keywords as $key) {
 			$key = strtolower($key);
 		
@@ -304,7 +303,6 @@ if(isset($_POST['btn-login'])) {
 										$result = $conn->query($query);
 
 										while($row = $result->fetch_assoc()) {
-											//UPDATE
 											$query = "SELECT `id_keyword` FROM `contains` WHERE `id_project`='".$row['id']."'";
 											$keyIds = $conn->query($query);
 											
