@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Creato il: Apr 13, 2018 alle 14:12
+-- Creato il: Mag 20, 2018 alle 17:37
 -- Versione del server: 10.1.29-MariaDB
 -- Versione PHP: 7.2.0
 
@@ -64,7 +64,19 @@ INSERT INTO `contains` (`id`, `id_project`, `id_keyword`) VALUES
 (5, 1, 7),
 (6, 1, 10),
 (7, 1, 11),
-(8, 1, 13);
+(8, 1, 13),
+(9, 46, 17),
+(10, 46, 19),
+(11, 46, 20),
+(12, 47, 21),
+(13, 47, 22),
+(14, 47, 23),
+(15, 47, 24),
+(16, 47, 19),
+(17, 47, 25),
+(18, 47, 26),
+(19, 48, 27),
+(20, 49, 28);
 
 -- --------------------------------------------------------
 
@@ -97,7 +109,19 @@ INSERT INTO `keyword` (`id`, `name`) VALUES
 (13, 'shield'),
 (14, 'server'),
 (15, 'client'),
-(16, 'completo');
+(16, 'completo'),
+(17, 'progetto'),
+(18, 'swago'),
+(19, 'test'),
+(20, 'nonfinal'),
+(21, 'samt'),
+(22, 'dwd'),
+(23, 'sad'),
+(24, 'awdawdd'),
+(25, 'keyword'),
+(26, '2018'),
+(27, 'samtlol'),
+(28, '');
 
 -- --------------------------------------------------------
 
@@ -117,7 +141,17 @@ CREATE TABLE `participates` (
 
 INSERT INTO `participates` (`id`, `id_project`, `id_author`) VALUES
 (1, 1, 4),
-(2, 1, 5);
+(2, 1, 5),
+(3, 33, 5),
+(4, 33, 4),
+(5, 42, 5),
+(6, 43, 5),
+(7, 44, 5),
+(8, 45, 4),
+(9, 46, 5),
+(10, 47, 4),
+(11, 48, 5),
+(12, 49, 5);
 
 -- --------------------------------------------------------
 
@@ -144,7 +178,17 @@ CREATE TABLE `project` (
 INSERT INTO `project` (`id`, `title`, `description`, `length`, `final_vote`, `progress`, `comment`, `id_responsible`, `doc_path`) VALUES
 (1, 'ReactionGame', 'Realizzazione di un sistema di gioco e simulazione per l\'allenamento dei tempi di reazione ed il miglioramento della coordinazione per sportivi basato su Arduino ', 94, 4, 90, 'Quasi completo e funzionante', 6, 'root/documentations/reactiongame.pdf'),
 (18, '3q', 'qwd', 34, 4, 34, 'acd', 6, 'C:\\Users\\wHisxaa\\Documents\\GitMain\\Carthafind\\database\\scheme_image.PNG\\'),
-(20, 'Google', 'Browser di ricerca avanzata', 200, 5, 98, 'Funzionante e veloce', 6, 'C:\\Users\\wHisxaa\\Documents\\GitMain\\Carthafind\\database\\scheme.dbs.bak\\');
+(20, 'Google', 'Browser di ricerca avanzata', 200, 5, 98, 'Funzionante e veloce', 6, 'C:\\Users\\wHisxaa\\Documents\\GitMain\\Carthafind\\database\\scheme.dbs.bak\\'),
+(33, 'AAAAAAAAAAAAA', 'AAAAAAAAAAAAA', 45, 5, 67, 'QWDQDQ', 9, 'C:\\Users\\wHisxaa\\Documents\\GitMain\\Carthafind\\database\\scheme_image.PNG\\'),
+(41, 'COLUGNAT', 'COLUGNAT123', 1, 1, 1, 'wdwdd', 6, 'documentations/I3_Documentazione_ReactionGame.pdf'),
+(42, 'TESTDOWNLOAD', 'TESTDOWNLOAD', 3, 3, 3, 'TESTDOWNLOAD', 6, 'documentations/I3_Documentazione_ReactionGame.pdf'),
+(43, 'AAAAAAAAAAAAAAAAAAAAA', 'AASSSSSSSSSSSSSSSSSSSS', 3, 3, 3, 'QWFDD', 6, 'documentations/I3_Documentazione_ReactionGame.pdf'),
+(44, 'AAAAAAAAAAAAAAAAAAAAA', 'AASSSSSSSSSSSSSSSSSSSS', 3, 3, 3, 'QWFDD', 6, 'documentations/I3_Documentazione_ReactionGame.pdf'),
+(45, 'TESTKEYWORD', 'TESTKEYWORD', 23, 23, 23, 'TESTKEYWORD', 6, 'documentations/I3_Documentazione_ReactionGame.pdf'),
+(46, 'TESTREFRESH', 'TESTREFRESH', 23, 23, 23, 'TESTREFRESH', 6, 'documentations/I3_Documentazione_ReactionGame.pdf'),
+(47, 'TESTKEYWORD2', 'TESTKEYWORD2', 23, 23, 23, 'TESTKEYWORD2', 6, 'documentations/I3_Verbale_ReactionGame_17_11_2017.docx'),
+(48, 'KEYWORDTEST3', 'KEYWORDTEST3', 23, 23, 23, 'KEYWORDTEST3', 6, 'documentations/I3_Documentazione_ReactionGame.pdf'),
+(49, 'KEYWORDTEST4', 'KEYWORDTEST4', 2, 2, 2, 'KEYWORDTEST4', 6, 'documentations/I3_Documentazione_ReactionGame.pdf');
 
 -- --------------------------------------------------------
 
@@ -203,6 +247,13 @@ CREATE TABLE `verify` (
   `id` int(11) NOT NULL,
   `token` varchar(16) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dump dei dati per la tabella `verify`
+--
+
+INSERT INTO `verify` (`id`, `token`) VALUES
+(28, 'gbnZYmxN8qn1TOnm');
 
 --
 -- Indici per le tabelle scaricate
@@ -269,25 +320,25 @@ ALTER TABLE `verify`
 -- AUTO_INCREMENT per la tabella `contains`
 --
 ALTER TABLE `contains`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- AUTO_INCREMENT per la tabella `keyword`
 --
 ALTER TABLE `keyword`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
 
 --
 -- AUTO_INCREMENT per la tabella `participates`
 --
 ALTER TABLE `participates`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT per la tabella `project`
 --
 ALTER TABLE `project`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=50;
 
 --
 -- AUTO_INCREMENT per la tabella `user`
